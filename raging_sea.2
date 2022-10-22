@@ -1,0 +1,50 @@
+province_event = { 
+    id = the_raging_sea.2 
+    title = "the_raging_sea_2_title" 
+    desc = "the_raging_sea_2_desc" 
+    picture = SIEGE_eventPicture
+    hidden = yes
+    
+    trigger = { 
+        controller = { ai = no }
+        fort_level = 2
+        has_port = yes
+        is_blockaded = no
+        NOT = { 
+            controller = { tag = REB } 
+        }
+        has_siege = yes 
+    }
+    mean_time_to_happen = { days = 1 }
+    
+    immediate = { 
+        owner = { 
+            save_event_target_as = rs_defender
+            export_to_variable = { which = rs_current_mil value = mil_tech }
+            random_war_enemy_country = {
+                limit = {
+                ROOT = { sieged_by = PREV }
+                #the province in the event is besieged by the country in this scope
+                }
+                save_event_target_as = rs_besieger
+                export_to_variable = { which = rs_current_mil value = mil_tech }
+                subtract_variable = { which = rs_current_mil which = rs_defender }
+            }
+        }
+    }
+    
+    option = {
+        name = "the_raging_sea_2_a"  
+        if = {
+            limit = {
+                event_target:rs_besieger = {
+                    NOT = {
+                    #the difference between techs isn't 9 or more
+                    check_variable = { which = rs_current_mil value = 9 }
+                    }
+                }
+            }
+            province_event = { id = the_raging_sea.1 }
+        }
+    }
+}
